@@ -53,8 +53,7 @@ enum {
 
 /* Custom keycodes */
 enum {
-    CT_SCCO = 0,
-    CT_QUDQ,
+    CT_QUDQ = 0,
     CT_GRTI,
     CT_TA,
     CT_LBP,
@@ -106,8 +105,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         TD(CT_GRTI),         KC_1,          KC_2,      KC_3,     KC_4,       KC_5,    KC_ESC,
         KC_TAB,              KC_Q,          KC_W,      KC_E,     KC_R,       KC_T,    TD(CT_LBP),
-        TD(CT_TA),           KC_A,          KC_S,      KC_D,     KC_F,       KC_G,
-        KC_LSFT,             LCTL_T(KC_Z),  KC_X,      KC_C,     KC_V,       KC_B,    LT(ARRW, KC_MINUS),
+        TD(CT_TA),           LCTL_T(KC_A),          KC_S,      KC_D,     KC_F,       KC_G,
+        KC_LSFT,             KC_Z,          KC_X,      KC_C,     KC_V,       KC_B,    LT(ARRW, KC_MINUS),
         KC_NO,               KC_NO,         KC_NO,     KC_LALT,  KC_LGUI,
 
         F(F_ALT), F(F_GUI),
@@ -115,10 +114,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_BSPC, F(F_SFT), KC_ESC,
 
         // right handh
-        M(Fx),               KC_6,      KC_7,      KC_8,     KC_9,       KC_0,            KC_BSPC,
-        TD(CT_RBP),          KC_Y,      KC_U,      KC_I,     KC_O,       KC_P,            KC_BSLS,
-                             KC_H,      KC_J,      KC_K,     KC_L,       TD(CT_SCCO),     TD(CT_QUDQ),
-        LT(ARRW, KC_EQL),    KC_N,      KC_M,      KC_COMM,  KC_DOT,     RCTL_T(KC_SLSH), KC_RSFT,
+        M(Fx),               KC_6,      KC_7,      KC_8,     KC_9,       KC_0,                KC_BSPC,
+        TD(CT_RBP),          KC_Y,      KC_U,      KC_I,     KC_O,       KC_P,                KC_BSLS,
+                             KC_H,      KC_J,      KC_K,     KC_L,       RCTL_T(KC_SCLN),     TD(CT_QUDQ),
+        LT(ARRW, KC_EQL),    KC_N,      KC_M,      KC_COMM,  KC_DOT,     KC_SLSH,             KC_RSFT,
         KC_RGUI,             KC_RALT,   KC_NO,     KC_NO,    TD(CT_SR),
 
         OSL(NMDIA), KC_DEL,
@@ -442,7 +441,6 @@ _td_sr_reset (qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [CT_SCCO] = ACTION_TAP_DANCE_DOUBLE (KC_SCLN, KC_COLN),
     [CT_QUDQ] = ACTION_TAP_DANCE_DOUBLE (KC_QUOT, KC_DQUO),
     [CT_GRTI] = ACTION_TAP_DANCE_DOUBLE (KC_GRV,  KC_TILD),
     [CT_TA]  = {
