@@ -1,0 +1,5 @@
+
+#+BEGIN_EXAMPLE
+  $ clone to ~/opt/qmk_firmware/keyboards/ergodox/keymaps/shihpin
+  $ ./reflash.sh
+#+END_EXAMPLE
