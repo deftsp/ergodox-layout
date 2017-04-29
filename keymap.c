@@ -14,6 +14,20 @@
 #include "wait.h"
 #include "version.h"
 
+#define TD_PRESSED_EVENT 0xFF
+
+#define ACTION_TAP_DANCE_DOUBLE_MOD(kc1, kc2, kc3) {                    \
+    .fn = { NULL, _td_double_mod_finished, _td_double_mod_reset },      \
+    .user_data = (void *)&((td_tap_dance_triple_t) { kc1, kc2, kc3 }),    \
+    }
+
+typedef struct {
+    uint16_t kc1;
+    uint16_t kc2;
+    uint16_t kc3;
+} td_tap_dance_triple_t;
+
+
 /* Layers */
 enum {
     BASE = 0,
@@ -55,6 +69,8 @@ enum {
 enum {
     CT_QUDQ = 0,
     CT_GRTI,
+    CT_MUG,  // -, _, LGUI
+    CT_CSG,  // :, ;, RGUI
     CT_TA,
     CT_LBP,
     CT_RBP,
@@ -87,11 +103,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |  KC_TAB   |   Q  |   W  |   E  |   R  |   T  |   (  |           |  )   |   Y  |   U  |   I  |   O  |  P   |     \     |
  * |-----------+------+------+------+------+------|   [  |           |  ]   |------+------+------+------+------+-----------|
- * | Tab/ARROW |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |  ;   |     '     |
+ * | Tab/ARROW |A/Ctrl|   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |;/Ctrl|     '     |
  * |-----------+------+------+------+------+------|   -  |           |  =   |------+------+------+------+------+-----------|
- * |  LShift   |Z/Ctrl|   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |//Ctrl|  RShift   |
+ * |  LShift   |  Z   |   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |   /  |  RShift   |
  * `-----------+------+------+------+------+-------------'           `-------------+------+------+------+------+-----------'
- *     |       |      |      | LALT | LGUI |                                       | RGUI | RALT |      |      |       |
+ *     |       |      |      | LALT |-_/GUI|                                       |:;/GUI| RALT |      |      |       |
  *     `-----------------------------------'                                       `-----------------------------------'
  *                                         ,-------------.           ,-------------.
  *                                         | LAlt | GUI  |           | MDIA | Del  |
@@ -107,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,              KC_Q,          KC_W,      KC_E,     KC_R,       KC_T,    TD(CT_LBP),
         TD(CT_TA),           LCTL_T(KC_A),          KC_S,      KC_D,     KC_F,       KC_G,
         KC_LSFT,             KC_Z,          KC_X,      KC_C,     KC_V,       KC_B,    LT(ARRW, KC_MINUS),
-        KC_NO,               KC_NO,         KC_NO,     KC_LALT,  KC_LGUI,
+        KC_NO,               KC_NO,         KC_NO,     KC_LALT,  TD(CT_MUG),
 
         F(F_ALT), F(F_GUI),
         F(F_CTRL),
@@ -118,7 +134,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TD(CT_RBP),          KC_Y,      KC_U,      KC_I,     KC_O,       KC_P,                KC_BSLS,
                              KC_H,      KC_J,      KC_K,     KC_L,       RCTL_T(KC_SCLN),     TD(CT_QUDQ),
         LT(ARRW, KC_EQL),    KC_N,      KC_M,      KC_COMM,  KC_DOT,     KC_SLSH,             KC_RSFT,
-        KC_RGUI,             KC_RALT,   KC_NO,     KC_NO,    TD(CT_SR),
+        TD(CT_CSG),          KC_RALT,   KC_NO,     KC_NO,    TD(CT_SR),
 
         OSL(NMDIA), KC_DEL,
         KC_LEAD,
@@ -359,6 +375,32 @@ static void tap_dance_ta_reset (qk_tap_dance_state_t *state, void *user_data) {
         layer_off (ARRW);
 }
 
+
+static void _td_double_mod_finished (qk_tap_dance_state_t *state, void *user_data) {
+    td_tap_dance_triple_t *tripple = (td_tap_dance_triple_t *) user_data;
+    if (state->pressed && state->count == 1) {
+        register_code(tripple->kc3);
+        state->count = TD_PRESSED_EVENT; // magic number for reset
+    } else if (state->count == 1) {
+        register_code16(tripple->kc1);
+    } else if (state->count >= 2) {
+        register_code16(tripple->kc2);
+    }
+}
+
+static void _td_double_mod_reset (qk_tap_dance_state_t *state, void *user_data) {
+    td_tap_dance_triple_t *tripple = (td_tap_dance_triple_t *) user_data;
+
+    if (state->count == TD_PRESSED_EVENT) {
+        unregister_code(tripple->kc3);
+    } else if (state->count == 1) {
+        unregister_code16(tripple->kc1);
+    } else if (state->count >=2) {
+        unregister_code16(tripple->kc2);
+    }
+}
+
+
 static void
 _td_sr_each (qk_tap_dance_state_t *state, void *user_data) {
     skip_leds = true;
@@ -447,6 +489,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
         .fn = { NULL, tap_dance_ta_finished, tap_dance_ta_reset },
         .user_data = (void *)&((td_ta_state_t) { false, false })
     },
+    [CT_MUG] = ACTION_TAP_DANCE_DOUBLE_MOD(KC_MINS, KC_UNDS, KC_LGUI),
+    [CT_CSG] = ACTION_TAP_DANCE_DOUBLE_MOD(KC_COLN, KC_SCLN, KC_RGUI),
     [CT_LBP] = ACTION_TAP_DANCE_DOUBLE (KC_LBRC, KC_LPRN),
     [CT_RBP] = ACTION_TAP_DANCE_DOUBLE (KC_RBRC, KC_RPRN),
     [CT_SR]  = ACTION_TAP_DANCE_FN_ADVANCED (_td_sr_each, _td_sr_finished, _td_sr_reset)
