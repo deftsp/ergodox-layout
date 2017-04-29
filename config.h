@@ -3,6 +3,9 @@
 
 #include "../../config.h"
 
+/* adjust the hold/tap delay */
+#undef TAPPING_TERM
+#define TAPPING_TERM    200
 
 #undef MOUSEKEY_TIME_TO_MAX
 #define MOUSEKEY_TIME_TO_MAX 1

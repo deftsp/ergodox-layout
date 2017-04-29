@@ -1,5 +1,7 @@
 /*
- * shihpin's ErgoDox layout, based on https://github.com/algernon/ergodox-layout
+ * shihpin's ErgoDox layout
+ * https://github.com/algernon/ergodox-layout
+ * https://implementsblog.com/2016/10/16/my-ergodox-ezs-custom-layout/
  */
 
 #include <stdarg.h>
@@ -103,9 +105,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |  KC_TAB   |   Q  |   W  |   E  |   R  |   T  |   (  |           |  )   |   Y  |   U  |   I  |   O  |  P   |     \     |
  * |-----------+------+------+------+------+------|   [  |           |  ]   |------+------+------+------+------+-----------|
- * | Tab/ARROW |A/Ctrl|   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |;/Ctrl|     '     |
+ * | Tab/ARROW | A/SHF| S/CTL| D/ALT| F/GUI|   G  |------|           |------|   H  | J/GUI| K/ALT| L/CTL| ;/SHF|     '     |
  * |-----------+------+------+------+------+------|   -  |           |  =   |------+------+------+------+------+-----------|
- * |  LShift   |  Z   |   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |   /  |  RShift   |
+ * |           |  Z   |   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |   /  |           |
  * `-----------+------+------+------+------+-------------'           `-------------+------+------+------+------+-----------'
  *     |       |      |      | LALT |-_/GUI|                                       |:;/GUI| RALT |      |      |       |
  *     `-----------------------------------'                                       `-----------------------------------'
@@ -119,22 +121,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [BASE] = KEYMAP(
         // left hand
-        TD(CT_GRTI),         KC_1,          KC_2,      KC_3,     KC_4,       KC_5,    KC_ESC,
-        KC_TAB,              KC_Q,          KC_W,      KC_E,     KC_R,       KC_T,    TD(CT_LBP),
-        TD(CT_TA),           LCTL_T(KC_A),          KC_S,      KC_D,     KC_F,       KC_G,
-        KC_LSFT,             KC_Z,          KC_X,      KC_C,     KC_V,       KC_B,    LT(ARRW, KC_MINUS),
-        KC_NO,               KC_NO,         KC_NO,     KC_LALT,  TD(CT_MUG),
+        TD(CT_GRTI),         KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_ESC,
+        KC_TAB,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                TD(CT_LBP),
+        TD(CT_TA),           LSFT_T(KC_A),  LCTL_T(KC_S),  LALT_T(KC_D), LGUI_T(KC_F), KC_G,
+        KC_LSFT,             KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(ARRW, KC_MINUS),
+        KC_NO,               KC_NO,         KC_NO,         KC_LALT,      TD(CT_MUG),
 
         F(F_ALT), F(F_GUI),
         F(F_CTRL),
         KC_BSPC, F(F_SFT), KC_ESC,
 
         // right handh
-        M(Fx),               KC_6,      KC_7,      KC_8,     KC_9,       KC_0,                KC_BSPC,
-        TD(CT_RBP),          KC_Y,      KC_U,      KC_I,     KC_O,       KC_P,                KC_BSLS,
-                             KC_H,      KC_J,      KC_K,     KC_L,       RCTL_T(KC_SCLN),     TD(CT_QUDQ),
-        LT(ARRW, KC_EQL),    KC_N,      KC_M,      KC_COMM,  KC_DOT,     KC_SLSH,             KC_RSFT,
-        TD(CT_CSG),          KC_RALT,   KC_NO,     KC_NO,    TD(CT_SR),
+        M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
+        TD(CT_RBP),          KC_Y,          KC_U,         KC_I,          KC_O,         KC_P,                KC_BSLS,
+                             KC_H,          RGUI_T(KC_J), RALT_T(KC_K),  RCTL_T(KC_L), RSFT_T(KC_SCLN),     TD(CT_QUDQ),
+        LT(ARRW, KC_EQL),    KC_N,          KC_M,         KC_COMM,       KC_DOT,       KC_SLSH,             KC_RSFT,
+        TD(CT_CSG),          KC_RALT,       KC_NO,        KC_NO,         TD(CT_SR),
 
         OSL(NMDIA), KC_DEL,
         KC_LEAD,
@@ -657,3 +659,7 @@ bool process_record_user (uint16_t keycode, keyrecord_t *record) {
 
   return true;
 }
+
+/* Local Variables: */
+/* eval: (auto-fill-mode -1) */
+/* End: */
