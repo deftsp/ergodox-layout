@@ -18,9 +18,15 @@
 
 #define TD_PRESSED_EVENT 0xFF
 
+
+#define ACTION_TAP_DANCE_MOD_TAP(kc1, kc2) {                        \
+    .fn = { NULL, _td_mod_tap_finished, _td_mod_tap_reset },        \
+    .user_data = (void *)&((qk_tap_dance_pair_t) { kc1, kc2 }),     \
+  }
+
 #define ACTION_TAP_DANCE_DOUBLE_MOD(kc1, kc2, kc3) {                    \
     .fn = { NULL, _td_double_mod_finished, _td_double_mod_reset },      \
-    .user_data = (void *)&((td_tap_dance_triple_t) { kc1, kc2, kc3 }),    \
+    .user_data = (void *)&((td_tap_dance_triple_t) { kc1, kc2, kc3 }),  \
     }
 
 typedef struct {
@@ -73,11 +79,28 @@ enum {
     CT_GRTI,
     CT_MUG,  // -, _, LGUI
     CT_CSG,  // :, ;, RGUI
-    CT_TA,
+    CT_FGUI,
+    CT_DALT,
+    CT_EA,
     CT_LBP,
     CT_RBP,
     CT_SR,
 };
+
+// user defined combo
+/*
+ * enum process_combo_event {
+ *     CC_ESC = 0,
+ *     CC_COPY,
+ * };
+ *
+ * const uint16_t PROGMEM esc_combo[] = {KC_E, KC_R, COMBO_END};
+ * const uint16_t PROGMEM copy_combo[] = {KC_C, KC_V, COMBO_END};
+ * combo_t key_combos[COMBO_COUNT] = {
+ *     [CC_ESC]  = COMBO_ACTION(esc_combo),
+ *     [CC_COPY] = COMBO_ACTION(copy_combo),
+ * };
+ */
 
 /* States & timers */
 uint16_t gui_timer = 0;
@@ -123,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         TD(CT_GRTI),         KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_ESC,
         KC_TAB,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                TD(CT_LBP),
-        TD(CT_TA),           LSFT_T(KC_A),  LCTL_T(KC_S),  LALT_T(KC_D), LGUI_T(KC_F), KC_G,
+        TD(CT_EA),           LSFT_T(KC_A),  LCTL_T(KC_S),  LALT_T(KC_D), LGUI_T(KC_F), KC_G,
         KC_LSFT,             KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(ARRW, KC_MINUS),
         KC_NO,               KC_NO,         KC_NO,         KC_LALT,      TD(CT_MUG),
 
@@ -345,7 +368,7 @@ typedef struct {
     bool sticky;
 } td_ta_state_t;
 
-static void tap_dance_ta_finished (qk_tap_dance_state_t *state, void *user_data) {
+static void _td_ea_finished (qk_tap_dance_state_t *state, void *user_data) {
     td_ta_state_t *td_ta = (td_ta_state_t *) user_data;
 
     if (td_ta->sticky) {
@@ -358,7 +381,7 @@ static void tap_dance_ta_finished (qk_tap_dance_state_t *state, void *user_data)
 
     // press down -> press up
     if (state->count == 1 && !state->pressed) {
-        register_code (KC_TAB);
+        register_code (KC_ESC);
         td_ta->sticky = false;
         td_ta->layer_toggle = false;
     } else {
@@ -368,11 +391,11 @@ static void tap_dance_ta_finished (qk_tap_dance_state_t *state, void *user_data)
     }
 }
 
-static void tap_dance_ta_reset (qk_tap_dance_state_t *state, void *user_data) {
+static void _td_ea_reset (qk_tap_dance_state_t *state, void *user_data) {
     td_ta_state_t *td_ta = (td_ta_state_t *) user_data;
 
     if (!td_ta->layer_toggle)
-        unregister_code (KC_TAB);
+        unregister_code (KC_ESC);
     if (!td_ta->sticky)
         layer_off (ARRW);
 }
@@ -402,6 +425,26 @@ static void _td_double_mod_reset (qk_tap_dance_state_t *state, void *user_data) 
     }
 }
 
+
+void _td_mod_tap_finished(qk_tap_dance_state_t *state, void *user_data) {
+    qk_tap_dance_pair_t *pair = (qk_tap_dance_pair_t *)user_data;
+    if (state->pressed && state->count == 1) {
+        register_mods(pair->kc2);
+        state->count = TD_PRESSED_EVENT; // magic number for reset
+    } else if (state->count >= 1) {
+        register_code16(pair->kc1);
+    }
+}
+
+void _td_mod_tap_reset(qk_tap_dance_state_t *state, void *user_data) {
+    qk_tap_dance_pair_t *pair = (qk_tap_dance_pair_t *)user_data;
+
+    if (state->count == TD_PRESSED_EVENT) {
+        unregister_mods(pair->kc2);
+    } else if (state->count >= 1) {
+        unregister_code16(pair->kc1);
+    }
+}
 
 static void
 _td_sr_each (qk_tap_dance_state_t *state, void *user_data) {
@@ -487,16 +530,43 @@ _td_sr_reset (qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [CT_QUDQ] = ACTION_TAP_DANCE_DOUBLE (KC_QUOT, KC_DQUO),
     [CT_GRTI] = ACTION_TAP_DANCE_DOUBLE (KC_GRV,  KC_TILD),
-    [CT_TA]  = {
-        .fn = { NULL, tap_dance_ta_finished, tap_dance_ta_reset },
+    [CT_EA]   = {
+        .fn = { NULL, _td_ea_finished, _td_ea_reset },
         .user_data = (void *)&((td_ta_state_t) { false, false })
     },
-    [CT_MUG] = ACTION_TAP_DANCE_DOUBLE_MOD(KC_MINS, KC_UNDS, KC_LGUI),
-    [CT_CSG] = ACTION_TAP_DANCE_DOUBLE_MOD(KC_COLN, KC_SCLN, KC_RGUI),
-    [CT_LBP] = ACTION_TAP_DANCE_DOUBLE (KC_LBRC, KC_LPRN),
-    [CT_RBP] = ACTION_TAP_DANCE_DOUBLE (KC_RBRC, KC_RPRN),
-    [CT_SR]  = ACTION_TAP_DANCE_FN_ADVANCED (_td_sr_each, _td_sr_finished, _td_sr_reset)
+    [CT_MUG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_MINS, KC_UNDS, KC_LGUI),
+    [CT_FGUI] = ACTION_TAP_DANCE_MOD_TAP(KC_F, MOD_LGUI),
+    [CT_DALT] = ACTION_TAP_DANCE_MOD_TAP(KC_D, MOD_LALT),
+    [CT_CSG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_COLN, KC_SCLN, KC_RGUI),
+    [CT_LBP]  = ACTION_TAP_DANCE_DOUBLE (KC_LBRC, KC_LPRN),
+    [CT_RBP]  = ACTION_TAP_DANCE_DOUBLE (KC_RBRC, KC_RPRN),
+    [CT_SR]   = ACTION_TAP_DANCE_FN_ADVANCED (_td_sr_each, _td_sr_finished, _td_sr_reset)
 };
+
+
+/*
+ * void process_combo_event(uint8_t combo_index, bool pressed) {
+ *     switch(combo_index) {
+ *     case CC_ESC:
+ *         if (pressed) {
+ *             register_code(KC_ESC);
+ *             unregister_code(KC_ESC);
+ *         }
+ *         break;
+ *     case CC_COPY:
+ *         if (pressed) {
+ *             add_weak_mods(MOD_BIT(KC_LGUI));
+ *             send_keyboard_report();
+ *             register_code(KC_C);
+ *             unregister_code(KC_C);
+ *             del_weak_mods(MOD_BIT(KC_LGUI));
+ *             send_keyboard_report();
+ *         }
+ *         break;
+ *     }
+ * }
+ */
+
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {

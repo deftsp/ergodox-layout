@@ -3,9 +3,17 @@
 
 #include "../../config.h"
 
+/*
+ * #undef COMBO_COUNT
+ * #define COMBO_COUNT 2
+ * #undef COMBO_TERM
+ * #define COMBO_TERM 20
+ */
+
+
 /* adjust the hold/tap delay */
 #undef TAPPING_TERM
-#define TAPPING_TERM    200
+#define TAPPING_TERM    180 // 200ms by default
 
 #undef MOUSEKEY_TIME_TO_MAX
 #define MOUSEKEY_TIME_TO_MAX 1
