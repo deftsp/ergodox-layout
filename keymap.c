@@ -236,9 +236,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [PROG] = KEYMAP(
         // left hand
         KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,   KC_NO,
-        KC_NO,      KC_F1,       KC_F2,      KC_F3,   KC_F4,   KC_F5,   KC_NO,
+        KC_NO,      KC_F1,       KC_F2,      KC_F3,   KC_F4,   KC_F5,   KC_TRNS,
         KC_NO,      KC_1,        KC_2,       KC_3,    KC_4,    KC_5,
-        KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,   KC_TRNS,
         KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,
 
         KC_VOLD, KC_VOLU,
@@ -247,9 +247,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         // right hand
         KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
-        KC_NO,     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,
+        KC_TRNS,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,
                    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_F12,
-        KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
+        KC_TRNS,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
         KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,
 
         KC_TRNS,   KC_NO,
@@ -404,7 +404,7 @@ static void _td_ea_reset (qk_tap_dance_state_t *state, void *user_data) {
 static void _td_double_mod_finished (qk_tap_dance_state_t *state, void *user_data) {
     td_tap_dance_triple_t *tripple = (td_tap_dance_triple_t *) user_data;
     if (state->pressed && state->count == 1) {
-        register_code(tripple->kc3);
+        register_mods(tripple->kc3);
         state->count = TD_PRESSED_EVENT; // magic number for reset
     } else if (state->count == 1) {
         register_code16(tripple->kc1);
@@ -417,7 +417,7 @@ static void _td_double_mod_reset (qk_tap_dance_state_t *state, void *user_data) 
     td_tap_dance_triple_t *tripple = (td_tap_dance_triple_t *) user_data;
 
     if (state->count == TD_PRESSED_EVENT) {
-        unregister_code(tripple->kc3);
+        unregister_mods(tripple->kc3);
     } else if (state->count == 1) {
         unregister_code16(tripple->kc1);
     } else if (state->count >=2) {
@@ -534,12 +534,12 @@ qk_tap_dance_action_t tap_dance_actions[] = {
         .fn = { NULL, _td_ea_finished, _td_ea_reset },
         .user_data = (void *)&((td_ta_state_t) { false, false })
     },
-    [CT_MUG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_MINS, KC_UNDS, KC_LGUI),
     [CT_FGUI] = ACTION_TAP_DANCE_MOD_TAP(KC_F, MOD_LGUI),
     [CT_DALT] = ACTION_TAP_DANCE_MOD_TAP(KC_D, MOD_LALT),
-    [CT_CSG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_COLN, KC_SCLN, KC_RGUI),
-    [CT_LBP]  = ACTION_TAP_DANCE_DOUBLE (KC_LBRC, KC_LPRN),
-    [CT_RBP]  = ACTION_TAP_DANCE_DOUBLE (KC_RBRC, KC_RPRN),
+    [CT_MUG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_MINS, KC_UNDS, MOD_BIT(KC_LGUI)),
+    [CT_CSG]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_COLN, KC_SCLN, MOD_BIT(KC_RGUI)),
+    [CT_LBP]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_LBRC, KC_LPRN, MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT)),
+    [CT_RBP]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_RBRC, KC_RPRN, MOD_BIT(KC_LGUI) | MOD_BIT(KC_RALT) | MOD_BIT(KC_RCTL) | MOD_BIT(KC_RSFT)),
     [CT_SR]   = ACTION_TAP_DANCE_FN_ADVANCED (_td_sr_each, _td_sr_finished, _td_sr_reset)
 };
 
