@@ -131,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         F(F_CTRL),
         KC_BSPC, F(F_SFT), KC_ESC,
 
-        // right handh
+        // right hand
         M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
         TD(CT_RBP),          KC_Y,          KC_U,         KC_I,          KC_O,         KC_P,                KC_BSLS,
                              KC_H,          RGUI_T(KC_J), RALT_T(KC_K),  RCTL_T(KC_L), RSFT_T(KC_SCLN),     TD(CT_QUDQ),
