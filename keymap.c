@@ -40,7 +40,7 @@ typedef struct {
 enum {
     BASE = 0,
     ARRW,
-    NMDIA,
+    PROG, // Numbers, Symbols, and Function Keys
 };
 
 /* Macros */
@@ -128,9 +128,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |  KC_TAB   |   Q  |   W  |   E  |   R  |   T  |   (  |           |  )   |   Y  |   U  |   I  |   O  |  P   |     \     |
  * |-----------+------+------+------+------+------|   [  |           |  ]   |------+------+------+------+------+-----------|
- * | Tab/ARROW | A/SHF| S/CTL| D/ALT| F/GUI|   G  |------|           |------|   H  | J/GUI| K/ALT| L/CTL| ;/SHF|     '     |
+ * | Tab/ARROW |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |  ;   |     '     |
  * |-----------+------+------+------+------+------|   -  |           |  =   |------+------+------+------+------+-----------|
- * |           |  Z   |   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |   /  |           |
+ * |   SHIFT   |Z/CTRL|   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |//CTRL|   SHIFT   |
  * `-----------+------+------+------+------+-------------'           `-------------+------+------+------+------+-----------'
  *     |       |      |      | LALT |-_/GUI|                                       |:;/GUI| RALT |      |      |       |
  *     `-----------------------------------'                                       `-----------------------------------'
@@ -146,8 +146,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         TD(CT_GRTI),         KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_ESC,
         KC_TAB,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                TD(CT_LBP),
-        TD(CT_EA),           LSFT_T(KC_A),  LCTL_T(KC_S),  LALT_T(KC_D), LGUI_T(KC_F), KC_G,
-        KC_LSFT,             KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(ARRW, KC_MINUS),
+        TD(CT_EA),           KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
+        KC_LSFT,             LCTL_T(KC_Z),  KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINUS),
         KC_NO,               KC_NO,         KC_NO,         KC_LALT,      TD(CT_MUG),
 
         F(F_ALT), F(F_GUI),
@@ -157,11 +157,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // right hand
         M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
         TD(CT_RBP),          KC_Y,          KC_U,         KC_I,          KC_O,         KC_P,                KC_BSLS,
-                             KC_H,          RGUI_T(KC_J), RALT_T(KC_K),  RCTL_T(KC_L), RSFT_T(KC_SCLN),     TD(CT_QUDQ),
-        LT(ARRW, KC_EQL),    KC_N,          KC_M,         KC_COMM,       KC_DOT,       KC_SLSH,             KC_RSFT,
+                             KC_H,          KC_J,         KC_K,          KC_L,         KC_SCLN,             TD(CT_QUDQ),
+        LT(PROG, KC_EQL),    KC_N,          KC_M,         KC_COMM,       KC_DOT,       RCTL_T(KC_SLSH),     KC_RSFT,
         TD(CT_CSG),          KC_RALT,       KC_NO,        KC_NO,         TD(CT_SR),
 
-        OSL(NMDIA), KC_DEL,
+        OSL(PROG), KC_DEL,
         KC_LEAD,
         KC_DEL, KC_ENT, KC_SPC
         ),
@@ -215,7 +215,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 2: Navigation & Media layer
  *
  * ,-----------------------------------------------------.           ,-----------------------------------------------------.
- * |           |  F1  |  F2  |  F3  |  F4  |  F5  |ScrLCK|           |      |  F6  |  F7  |  F8  |  F9  | F10  |           |
+ * |           |      |      |      |      |      |      |           |      |      |      |      |      |      |           |
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |           |      |      |      |      |      |      |           |      |      |      |      |      |      |           |
  * |-----------+------+------+------+------+------|      |           |      |------+------+------+------+------+-----------|
@@ -233,11 +233,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                  |      |      |      |           |      |      |      |
  *                                  `--------------------'           `--------------------'
  */
-    [NMDIA] = KEYMAP(
+    [PROG] = KEYMAP(
         // left hand
-        KC_NO,      KC_F1,       KC_F2,      KC_F3,   KC_F4,   KC_F5,   LGUI(KC_L),
         KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,   KC_NO,
-        KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,
+        KC_NO,      KC_F1,       KC_F2,      KC_F3,   KC_F4,   KC_F5,   KC_NO,
+        KC_NO,      KC_1,        KC_2,       KC_3,    KC_4,    KC_5,
         KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,   KC_NO,   KC_NO,
         KC_NO,      KC_NO,       KC_NO,      KC_NO,   KC_NO,
 
@@ -246,9 +246,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_NO,   KC_TRNS,
 
         // right hand
-        KC_TRNS,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,    KC_NO,
         KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
-        KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,
+                   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_F12,
         KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
         KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,
 
@@ -293,7 +293,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         case Fx:          /* Fx */
             if (record->event.pressed) {
                 set_oneshot_mods (MOD_LSFT);
-                set_oneshot_layer (NMDIA, ONESHOT_START);
+                set_oneshot_layer (PROG, ONESHOT_START);
             } else {
                 clear_oneshot_layer_state (ONESHOT_PRESSED);
             }
@@ -336,8 +336,8 @@ void matrix_init_user(void) {
         case 1UL << ARRW:
             default_layer = BASE;
             break;
-        case 1UL << NMDIA:
-            default_layer = NMDIA;
+        case 1UL << PROG:
+            default_layer = PROG;
             break;
     }
 };
@@ -579,7 +579,7 @@ void matrix_scan_user(void) {
     }
 
     if (!skip_leds) {
-        if (layer == NMDIA) {
+        if (layer == PROG) {
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
         }
@@ -603,7 +603,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_1_on ();
         } else {
             ergodox_right_led_1_set (LED_BRIGHTNESS_LO);
-            if (layer != NMDIA && !is_arrow) {
+            if (layer != PROG && !is_arrow) {
                 ergodox_right_led_1_off ();
             }
         }
@@ -622,7 +622,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_2_on ();
         } else {
             ergodox_right_led_2_set (LED_BRIGHTNESS_LO);
-            if (layer != NMDIA && !is_arrow) {
+            if (layer != PROG && !is_arrow) {
                 ergodox_right_led_2_off ();
             }
         }
@@ -635,7 +635,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_3_on ();
         } else {
             ergodox_right_led_3_set (LED_BRIGHTNESS_LO);
-            if (layer != NMDIA && !is_arrow) {
+            if (layer != PROG && !is_arrow) {
                 ergodox_right_led_3_off ();
             }
         }
@@ -707,8 +707,8 @@ bool process_record_user (uint16_t keycode, keyrecord_t *record) {
         layer_name = "BASE";
     } else if (layer == ARRW) {
         layer_name = "ARRW";
-    } else if (layer == NMDIA) {
-        layer_name = "NMDIA";
+    } else if (layer == PROG) {
+        layer_name = "PROG";
     }
 
     uprintf ("KL: kc=%02d, pressed=%d, layer=%s\n", keycode, record->event.pressed, layer_name);
