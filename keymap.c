@@ -76,7 +76,6 @@ enum {
 /* Custom keycodes */
 enum {
     CT_QUDQ = 0,
-    CT_GRTI,
     CT_MUG,  // -, _, LGUI
     CT_CSG,  // :, ;, RGUI
     CT_FGUI,
@@ -144,7 +143,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [BASE] = KEYMAP(
         // left hand
-        TD(CT_GRTI),         KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_6,
+        KC_GRV,              KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_6,
         KC_TAB,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                TD(CT_LBP),
         TD(CT_EA),           KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
         KC_LSFT,             LCTL_T(KC_Z),  KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINUS),
@@ -520,7 +519,6 @@ _td_sr_reset (qk_tap_dance_state_t *state, void *user_data) {
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [CT_QUDQ] = ACTION_TAP_DANCE_DOUBLE (KC_QUOT, KC_DQUO),
-    [CT_GRTI] = ACTION_TAP_DANCE_DOUBLE (KC_GRV,  KC_TILD),
     [CT_EA]   = {
         .fn = { NULL, _td_ea_finished, _td_ea_reset },
         .user_data = (void *)&((td_ta_state_t) { false, false })
