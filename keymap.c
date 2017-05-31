@@ -282,7 +282,6 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 
         case Fx:          /* Fx */
             if (record->event.pressed) {
-                set_oneshot_mods (MOD_LSFT);
                 set_oneshot_layer (PROG, ONESHOT_START);
             } else {
                 clear_oneshot_layer_state (ONESHOT_PRESSED);
