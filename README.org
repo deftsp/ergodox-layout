@@ -1,5 +1,5 @@
 
 #+BEGIN_EXAMPLE
-  $ clone to ~/opt/qmk_firmware/keyboards/ergodox/keymaps/shihpin
+  $ clone to ~/opt/qmk_firmware/keyboards/ergodox_ez/keymaps/shihpin
   $ ./reflash.sh
 #+END_EXAMPLE

@@ -4,8 +4,8 @@
  * https://implementsblog.com/2016/10/16/my-ergodox-ezs-custom-layout/
  */
 
+#include QMK_KEYBOARD_H
 #include <stdarg.h>
-#include "ergodox.h"
 #include "led.h"
 #include "debug.h"
 #include "action_layer.h"
@@ -156,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // right hand
         M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
         TD(CT_RBP),          KC_Y,          KC_U,         KC_I,          KC_O,         KC_P,                KC_BSLS,
-                             KC_H,          KC_J,         KC_K,          KC_L,         LT(AMM, KC_SCLN),    TD(CT_QUDQ),
+                             KC_H,          KC_J,         KC_K,          KC_L,         LT(AMM, KC_SCLN),    KC_DQUO,
         LT(PROG, KC_EQL),    KC_N,          KC_M,         KC_COMM,       KC_DOT,       RCTL_T(KC_SLSH),     KC_RSFT,
         TD(CT_CSG),          KC_RALT,       KC_NO,        KC_NO,         TD(CT_SR),
 

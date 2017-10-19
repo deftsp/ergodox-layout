@@ -1,18 +1,20 @@
 # Having a file like this allows you to override Makefile definitions
 # for your own particular keymap
 
-BOOTMAGIC_ENABLE  = no
-COMMAND_ENABLE    = no # Commands for debug and configuration
-SLEEP_LED_ENABLE  = no # Breathing sleep LED during USB suspend
-FORCE_NKRO       ?= yes
-DEBUG_ENABLE      = yes
+AUTOLOG_ENABLE   ?= no
+
+# BOOTMAGIC_ENABLE  = no
+COMBO_ENABLE      = no
+COMMAND_ENABLE    = no  # Commands for debug and configuration
 CONSOLE_ENABLE    = no
-TAP_DANCE_ENABLE  = yes
+DEBUG_ENABLE      = yes
+FORCE_NKRO       ?= yes
 KEYLOGGER_ENABLE ?= yes
 MOUSEKEY_ENABLE   = no
-COMBO_ENABLE      = no
-
-AUTOLOG_ENABLE   ?= no
+MIDI_ENABLE       = no
+RGBLIGHT_ENABLE   = yes
+SLEEP_LED_ENABLE  = no  # Breathing sleep LED during USB suspend
+TAP_DANCE_ENABLE  = yes
 
 ifeq (${FORCE_NKRO},yes)
 OPT_DEFS += -DFORCE_NKRO
@@ -42,6 +44,8 @@ KEYMAP_BRANCH = $(shell \
  git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
 OPT_DEFS += -DKEYMAP_VERSION=\"$(KEYMAP_VERSION)\\\#$(KEYMAP_BRANCH)\"
+
+
 
 ifndef QUANTUM_DIR
 	include ../../../../Makefile

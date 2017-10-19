@@ -15,6 +15,22 @@
 #undef TAPPING_TERM
 #define TAPPING_TERM    180  // 200ms by default
 
+/* #ifdef RGBLIGHT_ENABLE */
+/* #undef RGBLIGHT_SAT_STEP  */
+/* #define RGBLIGHT_SAT_STEP 12 */
+/* #define RGBLIGHT_EFFECT_KNIGHT_LENGTH 7 */
+/* #define RGBLIGHT_EFFECT_SNAKE_LENGTH 7 */
+/* #define RGBLIGHT_EFFECT_BREATHE_CENTER 1 */
+/* #endif // RGBLIGHT_ENABLE */
+
+/* #define FORCE_NKRO */
+/* #ifdef FORCE_NKRO */
+/* #define NKRO_EPSIZE 32 */
+/* #endif */
+
+/* #define PERMISSIVE_HOLD */
+
+
 #undef MOUSEKEY_TIME_TO_MAX
 #define MOUSEKEY_TIME_TO_MAX 1
 
