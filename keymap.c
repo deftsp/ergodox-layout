@@ -39,7 +39,8 @@ typedef struct {
 /* Layers */
 enum {
     BASE = 0,
-    PROG, // Numbers, Symbols, and Function Keys
+    PROG, // Symbols, and Function Keys
+    AMM, // Numbers
 };
 
 /* Macros */
@@ -207,6 +208,47 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS,
        KC_TRNS, RGB_HUD, RGB_HUI
 ),
+/* Keymap 2: Num
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * |        |      |      |      |      |      |      |           |      |      |  7   |  8   |  9   |  -   |        |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |      |  4   |  5   |  6   |  +   |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |------|           |------|      |  1   |  2   |  3   |  =   |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |      |  0   |      |  *   |  /   |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |      |      |      |      |      |                                       |      |      |      |      |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+[AMM] = KEYMAP(
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+
+                                                    KC_TRNS, KC_TRNS,
+                                                             KC_TRNS,
+                                           KC_TRNS, KC_TRNS, KC_TRNS,
+       // right hand
+       KC_TRNS,  KC_TRNS, KC_KP_7, KC_KP_8, KC_KP_9, KC_MINS, KC_TRNS,
+       KC_TRNS,  KC_TRNS, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, KC_TRNS,
+                 KC_TRNS, KC_KP_1, KC_KP_2, KC_KP_3, KC_PEQL, KC_TRNS,
+       KC_TRNS,  KC_TRNS, KC_KP_0, KC_TRNS, KC_PAST, KC_PSLS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS,
+       KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS
+ ),
 };
 
 const uint16_t PROGMEM fn_actions[] = {
@@ -286,9 +328,9 @@ void matrix_init_user(void) {
         case 1UL << PROG:
             default_layer = PROG;
             break;
-        /* case 1UL << AMM: */
-        /*     default_layer = BASE; */
-        /*     break; */
+        case 1UL << AMM:
+            default_layer = BASE;
+            break;
     }
 };
 
@@ -324,7 +366,7 @@ static void _td_ea_finished (qk_tap_dance_state_t *state, void *user_data) {
     if (td_ta->sticky) {
         td_ta->sticky = false;
         td_ta->layer_toggle = false;
-        /* layer_off (AMM); */
+        layer_off (AMM);
 
         return;
     }
@@ -336,7 +378,7 @@ static void _td_ea_finished (qk_tap_dance_state_t *state, void *user_data) {
         td_ta->layer_toggle = false;
     } else {
         td_ta->layer_toggle = true;
-        /* layer_on (AMM); */
+        layer_on (AMM);
         td_ta->sticky = (state->count == 2);
     }
 }
@@ -346,8 +388,8 @@ static void _td_ea_reset (qk_tap_dance_state_t *state, void *user_data) {
 
     if (!td_ta->layer_toggle)
         unregister_code (KC_ESC);
-    /* if (!td_ta->sticky) */
-    /*     layer_off (AMM); */
+    if (!td_ta->sticky)
+        layer_off (AMM);
 }
 
 
@@ -520,7 +562,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
     uint8_t layer = biton32(layer_state);
-    /* bool is_amm = false; */
+    bool is_amm = false;
 
     if (gui_timer != 0 && timer_elapsed (gui_timer) > TAPPING_TERM) {
         unregister_code (KC_LGUI);
@@ -531,21 +573,20 @@ void matrix_scan_user(void) {
         if (layer == PROG) {
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
+        } else if (layer == AMM) {
+            ergodox_right_led_2_on();
+            ergodox_right_led_3_on();
         }
-        /* else if (layer == AMM) { */
-        /*     ergodox_right_led_2_on(); */
-        /*     ergodox_right_led_3_on(); */
-        /* } */
     }
 
-    /* if (layer_state & (1UL << AMM)) { */
-    /*     if (!skip_leds) { */
-    /*         ergodox_right_led_1_on (); */
-    /*         ergodox_right_led_3_on (); */
-    /*     } */
+    if (layer_state & (1UL << AMM)) {
+        if (!skip_leds) {
+            ergodox_right_led_1_on ();
+            ergodox_right_led_3_on ();
+        }
 
-    /*     is_amm = true; */
-    /* } */
+        is_amm = true;
+    }
 
     if (!skip_leds) {
         uint8_t shift_bits = MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT);
@@ -556,7 +597,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_1_on ();
         } else {
             ergodox_right_led_1_set (LED_BRIGHTNESS_LO);
-            if (layer != PROG) {
+            if (layer != PROG && !is_amm) {
                 ergodox_right_led_1_off ();
             }
         }
@@ -575,7 +616,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_2_on ();
         } else {
             ergodox_right_led_2_set (LED_BRIGHTNESS_LO);
-            if (layer != PROG) {
+            if (layer != PROG && !is_amm) {
                 ergodox_right_led_2_off ();
             }
         }
@@ -588,7 +629,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_3_on ();
         } else {
             ergodox_right_led_3_set (LED_BRIGHTNESS_LO);
-            if (layer != PROG) {
+            if (layer != PROG && !is_amm) {
                 ergodox_right_led_3_off ();
             }
         }
@@ -660,10 +701,9 @@ bool process_record_user (uint16_t keycode, keyrecord_t *record) {
         layer_name = "BASE";
     } else if (layer == PROG) {
         layer_name = "PROG";
+    } else if (layer == AMM) {
+        layer_name = "AMM";
     }
-    /* else if (layer == AMM) { */
-    /*     layer_name = "AMM"; */
-    /* } */
 
     uprintf ("KL: kc=%02d, pressed=%d, layer=%s\n", keycode, record->event.pressed, layer_name);
   }
