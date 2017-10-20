@@ -1,8 +1,6 @@
 #ifndef CONFIG_ERGOPALORY_H
 #define CONFIG_ERGOPALORY_H
 
-#include "../../config.h"
-
 /*
  * #undef COMBO_COUNT
  * #define COMBO_COUNT 2
