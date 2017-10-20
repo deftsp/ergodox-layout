@@ -62,6 +62,7 @@ enum {
 
     // Fx
     Fx,
+    REKBD,
 };
 
 /* Fn keys */
@@ -147,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [BASE] = KEYMAP(
         // left hand
-        KC_NO,               KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_NO,
+        KC_NO,               KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                M(REKBD),
         KC_GRV,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                KC_TAB,
         KC_PGUP,             KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
         KC_PGDOWN,           KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINS),
@@ -298,6 +299,9 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             } else {
                 clear_oneshot_layer_state (ONESHOT_PRESSED);
             }
+            break;
+        case REKBD:
+            clear_keyboard();
             break;
     }
 
