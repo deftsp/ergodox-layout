@@ -67,10 +67,14 @@ enum {
 /* Fn keys */
 enum {
     F_BSE = 0,
-    F_GUI,
-    F_SFT,
-    F_ALT,
-    F_CTRL
+    F_LGUI,
+    F_LSFT,
+    F_LALT,
+    F_LCTL,
+    F_RGUI,
+    F_RSFT,
+    F_RALT,
+    F_RCTL
 };
 
 /* Custom keycodes */
@@ -131,13 +135,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------+------+------+------+------+------|  -   |           |  =   |------+------+------+------+------+-----------|
  * |   PgDn    |   Z  |   X  |   C  |   V  |   B  | LT->1|           | LT->1|   N  |   M  |   ,  |   .  |  /   |     -     |
  * `-----------+------+------+------+------+-------------'           `-------------+------+------+------+------+-----------'
- *     |       |      |      |LCTRL |Backsp|                                       |:;/GUI| RALT |      |      |       |
+ *     |       |      |      | LCTL |Backsp|                                       | Space| RCTL |      |      |       |
  *     `-----------------------------------'                                       `-----------------------------------'
  *                                         ,-------------.           ,-------------.
  *                                         | LAlt | GUI  |           | MDIA | Del  |
  *                                  ,------|------|------|           |------+------+------.
  *                                  |      |      | Ctrl |           | LEAD |      |      |
- *                                  | LGUI |LShift|------|           |------| Enter| Space|
+ *                                  | LGUI |LShift|------|           |------|RShift| RGUI |
  *                                  |      |      | ESC  |           | Del  |      |      |
  *                                  `--------------------'           `--------------------'
  */
@@ -147,22 +151,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                KC_TAB,
         KC_PGUP,             KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
         KC_PGDOWN,           KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINS),
-        KC_NO,               KC_NO,         KC_NO,         KC_LCTRL,     KC_BSPC,
+        KC_NO,               KC_NO,         KC_NO,         F(F_LCTL),    KC_BSPC,
 
-        F(F_ALT), F(F_GUI),
-        F(F_CTRL),
-        KC_LGUI,  KC_LSFT, KC_ESC,
+        F(F_LALT), F(F_LGUI),
+        F(F_LCTL),
+        F(F_LGUI),  F(F_LSFT), KC_ESC,
 
         // right hand
         M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
         KC_ENTER,            KC_Y,          KC_U,         KC_I,          KC_O,         KC_P,                KC_EQL,
                              KC_H,          KC_J,         KC_K,          KC_L,         KC_SCLN,             KC_QUOT,
         LT(PROG, KC_EQL),    KC_N,          KC_M,         KC_COMM,       KC_DOT,       KC_SLSH,             KC_MINS,
-        KC_SPC,              KC_RCTL,       KC_NO,        KC_NO,         TD(CT_SR),
+        KC_SPC,              F(F_RCTL),     KC_NO,        KC_NO,         TD(CT_SR),
 
         OSL(PROG), KC_DEL,
         KC_LEAD,
-        KC_DEL, KC_RSFT, KC_RALT
+        KC_DEL, F(F_RSFT), F(F_LALT)
         ),
 /* Keymap 1: Prog Layer
  *
@@ -252,11 +256,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [F_BSE]  = ACTION_LAYER_CLEAR(ON_PRESS),
-    [F_GUI]  = ACTION_MODS_ONESHOT (MOD_LGUI),
-    [F_SFT]  = ACTION_MODS_ONESHOT (MOD_LSFT),
-    [F_ALT]  = ACTION_MODS_ONESHOT (MOD_LALT),
-    [F_CTRL] = ACTION_MODS_ONESHOT (MOD_LCTL)
+    [F_BSE]   = ACTION_LAYER_CLEAR(ON_PRESS),
+    [F_LGUI]  = ACTION_MODS_ONESHOT (MOD_LGUI),
+    [F_LSFT]  = ACTION_MODS_ONESHOT (MOD_LSFT),
+    [F_LALT]  = ACTION_MODS_ONESHOT (MOD_LALT),
+    [F_LCTL]  = ACTION_MODS_ONESHOT (MOD_LCTL),
+    [F_RGUI]  = ACTION_MODS_ONESHOT (MOD_RGUI),
+    [F_RSFT]  = ACTION_MODS_ONESHOT (MOD_RSFT),
+    [F_RALT]  = ACTION_MODS_ONESHOT (MOD_RALT),
+    [F_RCTL]  = ACTION_MODS_ONESHOT (MOD_RCTL)
+
 };
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
