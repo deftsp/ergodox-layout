@@ -10,11 +10,13 @@ CONSOLE_ENABLE    = no
 DEBUG_ENABLE      = no
 FORCE_NKRO        = yes
 KEYLOGGER_ENABLE ?= yes
-MOUSEKEY_ENABLE   = no
 MIDI_ENABLE       = no
 RGBLIGHT_ENABLE   = yes
 SLEEP_LED_ENABLE  = no  # Breathing sleep LED during USB suspend
 TAP_DANCE_ENABLE  = yes
+
+# TODO: enable it macOS can not recognize it, but can input password when system boot
+MOUSEKEY_ENABLE   = no
 
 ifeq (${FORCE_NKRO},yes)
 OPT_DEFS += -DFORCE_NKRO
