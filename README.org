@@ -1,5 +1,9 @@
-
+* Building
 #+BEGIN_EXAMPLE
-  $ clone to ~/opt/qmk_firmware/keyboards/ergodox_ez/keymaps/shihpin
+  $ cd ~/opt && git clone https://github.com/qmk/qmk_firmware.git
+  $ cd qmk_firmware
+  $ git clone git@github.com:deftsp/ergodox-layout.git \
+              layouts/community/ergodox/shihpin
+  $ make ergodox_ez:shihpin
   $ ./reflash.sh
 #+END_EXAMPLE

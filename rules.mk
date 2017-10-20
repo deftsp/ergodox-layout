@@ -3,12 +3,12 @@
 
 AUTOLOG_ENABLE   ?= no
 
-# BOOTMAGIC_ENABLE  = no
+BOOTMAGIC_ENABLE  = no
 COMBO_ENABLE      = no
 COMMAND_ENABLE    = no  # Commands for debug and configuration
 CONSOLE_ENABLE    = no
-DEBUG_ENABLE      = yes
-FORCE_NKRO       ?= yes
+DEBUG_ENABLE      = no
+FORCE_NKRO        = yes
 KEYLOGGER_ENABLE ?= yes
 MOUSEKEY_ENABLE   = no
 MIDI_ENABLE       = no
