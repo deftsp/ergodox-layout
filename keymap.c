@@ -128,7 +128,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Base Layer
  *
  * ,-----------------------------------------------------.           ,-----------------------------------------------------.
- * | Play/Stop | 1  ! | 2  @ | 3  # | 4  $ | 5  % |      |           |  Fx  | 6  ^ | 7  & | 8  & | 9  ( | 0  ) |  Backsp   |
+ * | Play/Pause| 1  ! | 2  @ | 3  # | 4  $ | 5  % |      |           |  Fx  | 6  ^ | 7  & | 8  & | 9  ( | 0  ) |  Backsp   |
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |  KC_GRV   |   Q  |   W  |   E  |   R  |   T  | TAB  |           | Enter|   Y  |   U  |   I  |   O  |  P   |     =     |
  * |-----------+------+------+------+------+------|      |           |      |------+------+------+------+------+-----------|
@@ -148,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [BASE] = KEYMAP(
         // left hand
-        KC_NO,               KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                M(REKBD),
+        KC_MPLY,             KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                M(REKBD),
         KC_GRV,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                KC_TAB,
         KC_PGUP,             KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
         KC_PGDOWN,           KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINS),
