@@ -26,7 +26,8 @@
 /* #define NKRO_EPSIZE 32 */
 /* #endif */
 
-/* #define PERMISSIVE_HOLD */
+/* makes it easier for fast typists to use dual-function keys. */
+#define PERMISSIVE_HOLD
 
 
 #undef MOUSEKEY_TIME_TO_MAX
