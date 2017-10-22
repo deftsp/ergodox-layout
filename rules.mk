@@ -12,14 +12,15 @@ NKRO_ENABLE       = yes
 FORCE_NKRO       ?= yes
 KEYLOGGER_ENABLE ?= yes
 MIDI_ENABLE       = no
-RGBLIGHT_ENABLE   = yes
 SLEEP_LED_ENABLE  = no  # Breathing sleep LED during USB suspend
 TAP_DANCE_ENABLE  = yes
 EXTRAKEY_ENABLE   = yes          # Audio control and System control
 
-# TODO: enable it macOS can not recognize it, but can input password when system boot
-MOUSEKEY_ENABLE   = yes
+# https://docs.qmk.fm/feature_rgblight.html
+# my keyboard did not install addressable RGB lights, enable it will cause  boot abnormal.
+RGBLIGHT_ENABLE   = no
 
+MOUSEKEY_ENABLE   = yes
 
 # https://docs.qmk.fm/stenography.html
 # disable mousekeys, extra keys, or another USB endpoint to prevent conflicts.
@@ -53,8 +54,6 @@ KEYMAP_BRANCH = $(shell \
  git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
 OPT_DEFS += -DKEYMAP_VERSION=\"$(KEYMAP_VERSION)\\\#$(KEYMAP_BRANCH)\"
-
-
 
 ifndef QUANTUM_DIR
 	include ../../../../Makefile

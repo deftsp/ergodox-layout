@@ -91,21 +91,6 @@ enum {
     CT_SR,
 };
 
-// user defined combo
-/*
- * enum process_combo_event {
- *     CC_ESC = 0,
- *     CC_COPY,
- * };
- *
- * const uint16_t PROGMEM esc_combo[] = {KC_E, KC_R, COMBO_END};
- * const uint16_t PROGMEM copy_combo[] = {KC_C, KC_V, COMBO_END};
- * combo_t key_combos[COMBO_COUNT] = {
- *     [CC_ESC]  = COMBO_ACTION(esc_combo),
- *     [CC_COPY] = COMBO_ACTION(copy_combo),
- * };
- */
-
 /* States & timers */
 uint16_t gui_timer = 0;
 
@@ -494,30 +479,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [CT_RBP]  = ACTION_TAP_DANCE_DOUBLE_MOD(KC_RBRC, KC_RPRN, MOD_BIT(KC_LGUI) | MOD_BIT(KC_RALT) | MOD_BIT(KC_RCTL) | MOD_BIT(KC_RSFT)),
     [CT_SR]   = ACTION_TAP_DANCE_FN_ADVANCED (_td_sr_each, _td_sr_finished, _td_sr_reset)
 };
-
-
-/*
- * void process_combo_event(uint8_t combo_index, bool pressed) {
- *     switch(combo_index) {
- *     case CC_ESC:
- *         if (pressed) {
- *             register_code(KC_ESC);
- *             unregister_code(KC_ESC);
- *         }
- *         break;
- *     case CC_COPY:
- *         if (pressed) {
- *             add_weak_mods(MOD_BIT(KC_LGUI));
- *             send_keyboard_report();
- *             register_code(KC_C);
- *             unregister_code(KC_C);
- *             del_weak_mods(MOD_BIT(KC_LGUI));
- *             send_keyboard_report();
- *         }
- *         break;
- *     }
- * }
- */
 
 static void tap_keycodes (uint16_t code, ...) {
     uint16_t kc = code;
