@@ -5,18 +5,20 @@ AUTOLOG_ENABLE   ?= no
 
 BOOTMAGIC_ENABLE  = no
 COMBO_ENABLE      = no
-COMMAND_ENABLE    = no  # Commands for debug and configuration
+COMMAND_ENABLE    = yes  # Commands for debug and configuration
 CONSOLE_ENABLE    = no
 DEBUG_ENABLE      = no
-FORCE_NKRO        = yes
+NKRO_ENABLE       = yes
+FORCE_NKRO       ?= yes
 KEYLOGGER_ENABLE ?= yes
 MIDI_ENABLE       = no
 RGBLIGHT_ENABLE   = yes
 SLEEP_LED_ENABLE  = no  # Breathing sleep LED during USB suspend
 TAP_DANCE_ENABLE  = yes
+EXTRAKEY_ENABLE   = yes          # Audio control and System control
 
 # TODO: enable it macOS can not recognize it, but can input password when system boot
-MOUSEKEY_ENABLE   = no
+MOUSEKEY_ENABLE   = yes
 
 ifeq (${FORCE_NKRO},yes)
 OPT_DEFS += -DFORCE_NKRO

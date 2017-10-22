@@ -174,11 +174,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,---------------------------------------------------.           ,--------------------------------------------------.
  * |         |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |      | MsUp |      | Rclk |      |      |           |      |      |   {  |   }  |   [  |   ]  |   F12  |
+ * |         |      | MsUp | WHUp | Rclk |      |      |           |      |      |   {  |   }  |   [  |   ]  |   F12  |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |   HOME  |MsLeft|MsDown|MsRght| Lclk |      |------|           |------| Left | Down |  Up  | Right|      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |   END   |      |Insert|      | Mclk |      |      |           |      | Mute |      | Prev | Next |   \  |   |    |
+ * |   END   |      |Insert|WHDown| Mclk |      |      |           |      | Mute |      | Prev | Next |   \  |   |    |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |       |      |      |      |  Del |                                       |VolUp |VolDn |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
@@ -193,9 +193,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [PROG] = KEYMAP(
        // left hand
        KC_TRNS,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
-       KC_TRNS,KC_TRNS,KC_MS_U,KC_TRNS,KC_BTN2,KC_TRNS,KC_TRNS,
+       KC_TRNS,KC_TRNS,KC_MS_U,KC_WH_U,KC_BTN2,KC_TRNS,KC_TRNS,
        KC_HOME,KC_MS_L,KC_MS_D,KC_MS_R,KC_BTN1,KC_GRV,
-       KC_END, KC_TRNS,KC_INS, KC_TRNS,KC_BTN3,KC_TRNS,KC_TRNS,
+       KC_END, KC_TRNS,KC_INS, KC_WH_D,KC_BTN3,KC_TRNS,KC_TRNS,
        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_DEL,
 
                KC_TRNS,KC_TRNS,
@@ -311,62 +311,6 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 
     return MACRO_NONE;
 };
-
-// Runs just one time when the keyboard initializes.
-void matrix_init_user(void) {
-#ifdef DEBUG_ENABLE
-    debug_enable = true;
-    //debug_matrix = true;
-    //debug_keyboard = true;
-    //debug_mouse = false;
-#endif
-
-    ergodox_led_all_on();
-    for (int i = LED_BRIGHTNESS_HI; i > LED_BRIGHTNESS_LO; i--) {
-        ergodox_led_all_set (i);
-        wait_ms (5);
-    }
-    wait_ms(1000);
-    for (int i = LED_BRIGHTNESS_LO; i > 0; i--) {
-        ergodox_led_all_set (i);
-        wait_ms (10);
-    }
-    ergodox_led_all_off();
-
-    if (!eeconfig_is_enabled()) {
-        eeconfig_init();
-    }
-
-    uint8_t dl = eeconfig_read_default_layer ();
-    switch (dl) {
-        case 1UL << BASE:
-            default_layer = BASE;
-            break;
-        case 1UL << PROG:
-            default_layer = PROG;
-            break;
-        case 1UL << AMM:
-            default_layer = BASE;
-            break;
-    }
-};
-
-LEADER_EXTERNS();
-
-static void tap_keycodes (uint16_t code, ...) {
-    uint16_t kc = code;
-    va_list ap;
-
-    va_start(ap, code);
-
-    do {
-        register_code16(kc);
-        unregister_code16(kc);
-        wait_ms(50);
-        kc = va_arg(ap, int);
-    } while (kc != 0);
-    va_end(ap);
-}
 
 #define TAP_ONCE(code)                          \
     register_code (code);                       \
@@ -575,6 +519,63 @@ qk_tap_dance_action_t tap_dance_actions[] = {
  * }
  */
 
+static void tap_keycodes (uint16_t code, ...) {
+    uint16_t kc = code;
+    va_list ap;
+
+    va_start(ap, code);
+
+    do {
+        register_code16(kc);
+        unregister_code16(kc);
+        wait_ms(50);
+        kc = va_arg(ap, int);
+    } while (kc != 0);
+    va_end(ap);
+}
+
+// Runs just one time when the keyboard initializes.
+void matrix_init_user(void) {
+#ifdef DEBUG_ENABLE
+    debug_enable = true;
+    //debug_matrix = true;
+    //debug_keyboard = true;
+    //debug_mouse = false;
+#endif
+
+    ergodox_led_all_on();
+    for (int i = LED_BRIGHTNESS_HI; i > LED_BRIGHTNESS_LO; i--) {
+        ergodox_led_all_set (i);
+        wait_ms (5);
+    }
+    wait_ms(1000);
+    for (int i = LED_BRIGHTNESS_LO; i > 0; i--) {
+        ergodox_led_all_set (i);
+        wait_ms (10);
+    }
+    ergodox_led_all_off();
+
+    if (!eeconfig_is_enabled()) {
+        eeconfig_init();
+    }
+
+    uint8_t dl = eeconfig_read_default_layer ();
+    switch (dl) {
+        case 1UL << BASE:
+            default_layer = BASE;
+            break;
+        case 1UL << PROG:
+            default_layer = PROG;
+            break;
+        case 1UL << AMM:
+            default_layer = BASE;
+            break;
+    }
+};
+
+
+
+LEADER_EXTERNS();
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
@@ -590,9 +591,6 @@ void matrix_scan_user(void) {
         if (layer == PROG) {
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
-        } else if (layer == AMM) {
-            ergodox_right_led_2_on();
-            ergodox_right_led_3_on();
         }
     }
 
@@ -633,7 +631,7 @@ void matrix_scan_user(void) {
             ergodox_right_led_2_on ();
         } else {
             ergodox_right_led_2_set (LED_BRIGHTNESS_LO);
-            if (layer != PROG && !is_amm) {
+            if (layer != PROG) {
                 ergodox_right_led_2_off ();
             }
         }
@@ -651,7 +649,6 @@ void matrix_scan_user(void) {
             }
         }
     }
-
 
     LEADER_DICTIONARY() {
         leading = false;
