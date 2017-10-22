@@ -20,6 +20,11 @@ EXTRAKEY_ENABLE   = yes          # Audio control and System control
 # TODO: enable it macOS can not recognize it, but can input password when system boot
 MOUSEKEY_ENABLE   = yes
 
+
+# https://docs.qmk.fm/stenography.html
+# disable mousekeys, extra keys, or another USB endpoint to prevent conflicts.
+STENO_ENABLE      = no # it should
+
 ifeq (${FORCE_NKRO},yes)
 OPT_DEFS += -DFORCE_NKRO
 endif
