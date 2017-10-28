@@ -4,7 +4,6 @@
 AUTOLOG_ENABLE   ?= no
 
 BOOTMAGIC_ENABLE  = no
-COMBO_ENABLE      = no
 COMMAND_ENABLE    = yes  # Commands for debug and configuration
 CONSOLE_ENABLE    = no
 DEBUG_ENABLE      = no
@@ -21,6 +20,8 @@ EXTRAKEY_ENABLE   = yes          # Audio control and System control
 RGBLIGHT_ENABLE   = no
 
 MOUSEKEY_ENABLE   = yes
+
+COMBO_ENABLE = yes
 
 # https://docs.qmk.fm/stenography.html
 # disable mousekeys, extra keys, or another USB endpoint to prevent conflicts.

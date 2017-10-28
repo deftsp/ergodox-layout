@@ -16,6 +16,8 @@
 #include "wait.h"
 #include "version.h"
 
+static bool shihpin_clear_mods(void);
+
 #define TD_PRESSED_EVENT 0xFF
 
 
@@ -89,6 +91,17 @@ enum {
     CT_LBP,
     CT_RBP,
     CT_SR,
+};
+
+/* Combos */
+enum process_combo_event {
+  DF_ESC,
+};
+
+const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    [DF_ESC] = COMBO_ACTION(df_combo),
 };
 
 /* States & timers */
@@ -253,6 +266,20 @@ const uint16_t PROGMEM fn_actions[] = {
     [F_RCTL]  = ACTION_MODS_ONESHOT (MOD_RCTL)
 
 };
+
+void process_combo_event(uint8_t combo_index, bool pressed) {
+    switch(combo_index) {
+    case DF_ESC:
+        if (pressed) {
+            bool dirty_before_clear = shihpin_clear_mods();
+            if (!dirty_before_clear) {
+                register_code(KC_ESC);
+                unregister_code(KC_ESC);
+            }
+        }
+        break;
+    }
+}
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
@@ -666,6 +693,24 @@ void matrix_scan_user(void) {
     }
 }
 
+static bool shihpin_clear_mods(void) {
+    bool dirty_before_clear = false;
+
+    if ((get_oneshot_mods ()) && !has_oneshot_mods_timed_out ()) {
+        dirty_before_clear = true;
+        clear_oneshot_mods ();
+    }
+
+    if (get_mods() && get_oneshot_locked_mods()) {
+        dirty_before_clear = true;
+        clear_oneshot_locked_mods();
+        clear_mods();
+    }
+
+    return dirty_before_clear;
+}
+
+
 bool process_record_user (uint16_t keycode, keyrecord_t *record) {
 #if KEYLOGGER_ENABLE
   if (log_enable) {
@@ -686,20 +731,8 @@ bool process_record_user (uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case KC_ESC:
         if (record->event.pressed) {
-            // pressing ESC to clear oneshot mods
-            bool queue = true;
-
-            if ((get_oneshot_mods ()) && !has_oneshot_mods_timed_out ()) {
-                clear_oneshot_mods ();
-                queue = false;
-            }
-
-            if (get_mods() && get_oneshot_locked_mods()) {
-                clear_oneshot_locked_mods();
-                clear_mods();
-                queue = false;
-            }
-
+            // pressing ESC to clear  mods or send ESC
+            bool queue = !shihpin_clear_mods();
             return queue;
           }
       break;

@@ -5,7 +5,13 @@
 #undef TAPPING_TERM
 #define TAPPING_TERM    180  // 200ms by default
 
-#undef TAPPING_TOGGLE 2
+#undef COMBO_TERM
+#define COMBO_TERM 7
+
+#undef COMBO_COUNT
+#define COMBO_COUNT 1
+
+#undef TAPPING_TOGGLE
 #define TAPPING_TOGGLE 2
 
 /* makes it easier for fast typists to use dual-function keys. */
