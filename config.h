@@ -5,6 +5,9 @@
 #undef TAPPING_TERM
 #define TAPPING_TERM    180  // 200ms by default
 
+#undef TAPPING_TOGGLE 2
+#define TAPPING_TOGGLE 2
+
 /* makes it easier for fast typists to use dual-function keys. */
 #define PERMISSIVE_HOLD
 
