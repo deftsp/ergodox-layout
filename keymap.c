@@ -16,7 +16,7 @@
 #include "wait.h"
 #include "version.h"
 
-static bool shihpin_clear_mods(void);
+static bool shihpin_clear_keyboard(void);
 
 #define TD_PRESSED_EVENT 0xFF
 
@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Base Layer
  *
  * ,-----------------------------------------------------.           ,-----------------------------------------------------.
- * | Play/Pause| 1  ! | 2  @ | 3  # | 4  $ | 5  % |      |           |  Fx  | 6  ^ | 7  & | 8  & | 9  ( | 0  ) |  Backsp   |
+ * | Play/Pause| 1  ! | 2  @ | 3  # | 4  $ | 5  % | ESC  |           |  Fx  | 6  ^ | 7  & | 8  & | 9  ( | 0  ) |  Backsp   |
  * |-----------+------+------+------+------+-------------|           |------+------+------+------+------+------+-----------|
  * |  KC_GRV   |   Q  |   W  |   E  |   R  |   T  | TAB  |           | Enter|   Y  |   U  |   I  |   O  |  P   |     =     |
  * |-----------+------+------+------+------+------|      |           |      |------+------+------+------+------+-----------|
@@ -146,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [BASE] = KEYMAP(
         // left hand
-        KC_MPLY,             KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_NO,
+        KC_MPLY,             KC_1,          KC_2,          KC_3,         KC_4,         KC_5,                KC_ESC,
         KC_GRV,              KC_Q,          KC_W,          KC_E,         KC_R,         KC_T,                KC_TAB,
         KC_PGUP,             KC_A,          KC_S,          KC_D,         KC_F,         KC_G,
         KC_PGDOWN,           KC_Z,          KC_X,          KC_C,         KC_V,         KC_B,                LT(PROG, KC_MINS),
@@ -154,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         F(F_LALT), F(F_LGUI),
         F(F_LCTL),
-        F(F_LGUI),  F(F_LSFT), KC_ESC,
+        F(F_LGUI),  F(F_LSFT), TT(PROG),
 
         // right hand
         M(Fx),               KC_6,          KC_7,         KC_8,          KC_9,         KC_0,                KC_BSPC,
@@ -165,7 +165,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         OSL(PROG), KC_DEL,
         KC_LEAD,
-        KC_DEL, F(F_RSFT), F(F_LALT)
+        TT(PROG), F(F_RSFT), F(F_LALT)
         ),
 /* Keymap 1: Prog Layer
  *
@@ -271,7 +271,7 @@ void process_combo_event(uint8_t combo_index, bool pressed) {
     switch(combo_index) {
     case DF_ESC:
         if (pressed) {
-            bool dirty_before_clear = shihpin_clear_mods();
+            bool dirty_before_clear = shihpin_clear_keyboard();
             if (!dirty_before_clear) {
                 register_code(KC_ESC);
                 unregister_code(KC_ESC);
@@ -693,7 +693,7 @@ void matrix_scan_user(void) {
     }
 }
 
-static bool shihpin_clear_mods(void) {
+static bool shihpin_clear_keyboard(void) {
     bool dirty_before_clear = false;
 
     if ((get_oneshot_mods ()) && !has_oneshot_mods_timed_out ()) {
@@ -705,6 +705,12 @@ static bool shihpin_clear_mods(void) {
         dirty_before_clear = true;
         clear_oneshot_locked_mods();
         clear_mods();
+    }
+
+    uint8_t layer = biton32(layer_state);
+    if (layer != BASE) {
+        dirty_before_clear = true;
+        layer_clear();
     }
 
     return dirty_before_clear;
@@ -732,7 +738,7 @@ bool process_record_user (uint16_t keycode, keyrecord_t *record) {
     case KC_ESC:
         if (record->event.pressed) {
             // pressing ESC to clear  mods or send ESC
-            bool queue = !shihpin_clear_mods();
+            bool queue = !shihpin_clear_keyboard();
             return queue;
           }
       break;
